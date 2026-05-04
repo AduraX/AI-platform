@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eval-service
+  namespace: enterprise-ai
+  labels:
+    app: eval-service
+spec:
+  selector:
+    app: eval-service
+  ports:
+    - port: 8007
+      targetPort: 8007
+      protocol: TCP
+  type: ClusterIP

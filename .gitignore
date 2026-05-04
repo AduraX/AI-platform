@@ -1,0 +1,15 @@
+.DS_Store
+.env
+.env.local
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.next/
+node_modules/
+coverage/
+codex-notex.md

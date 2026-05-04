@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ai-platform-config
+  namespace: enterprise-ai
+data:
+  ENVIRONMENT: "production"
+  LOG_LEVEL: "INFO"
+  VECTOR_STORE_BACKEND: "qdrant"
+  EMBEDDING_PROVIDER: "ollama"
+  EMBEDDING_MODEL: "embeddinggemma"
+  INGESTION_JOB_STORE_BACKEND: "postgres"
+  INGESTION_QUEUE_BACKEND: "redis"
+  INGESTION_PROCESSING_MODE: "background"
+  AUTH_ENABLED: "true"
+  POSTGRES_HOST: "postgresql.enterprise-ai.svc.cluster.local"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "enterprise_ai"
+  REDIS_HOST: "redis.enterprise-ai.svc.cluster.local"
+  REDIS_PORT: "6379"
+  QDRANT_HOST: "qdrant.enterprise-ai.svc.cluster.local"
+  QDRANT_PORT: "6333"
+  OLLAMA_BASE_URL: "http://ollama.enterprise-ai.svc.cluster.local:11434"
+  OBJECT_STORAGE_ENDPOINT: "http://minio.enterprise-ai.svc.cluster.local:9000"
+  OBJECT_STORAGE_BUCKET: "enterprise-ai"
+  API_GATEWAY_BASE_URL: "http://api-gateway.enterprise-ai.svc.cluster.local:8000"
+  CHAT_SERVICE_BASE_URL: "http://chat-service.enterprise-ai.svc.cluster.local:8002"
+  RAG_SERVICE_BASE_URL: "http://rag-service.enterprise-ai.svc.cluster.local:8003"
+  INGESTION_SERVICE_BASE_URL: "http://ingestion-service.enterprise-ai.svc.cluster.local:8004"
+  OCR_SERVICE_BASE_URL: "http://ocr-service.enterprise-ai.svc.cluster.local:8005"
+  MODEL_ROUTER_BASE_URL: "http://model-router.enterprise-ai.svc.cluster.local:8006"
+  EVAL_SERVICE_BASE_URL: "http://eval-service.enterprise-ai.svc.cluster.local:8007"
+  CORS_ALLOWED_ORIGINS: '["https://ai-platform.example.com"]'

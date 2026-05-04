@@ -1,0 +1,58 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: ai-platform
+  namespace: enterprise-ai
+spec:
+  hosts:
+    - ai-platform
+  gateways:
+    - istio-system/istio-ingressgateway
+  http:
+    - match:
+        - uri:
+            prefix: /api/v1/chat
+      route:
+        - destination:
+            host: api-gateway.enterprise-ai.svc.cluster.local
+            port:
+              number: 8000
+    - match:
+        - uri:
+            prefix: /api/v1/documents
+      route:
+        - destination:
+            host: api-gateway.enterprise-ai.svc.cluster.local
+            port:
+              number: 8000
+    - match:
+        - uri:
+            prefix: /api/v1/
+      route:
+        - destination:
+            host: api-gateway.enterprise-ai.svc.cluster.local
+            port:
+              number: 8000
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: frontend.enterprise-ai.svc.cluster.local
+            port:
+              number: 3000
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: ai-platform-api-gateway
+  namespace: enterprise-ai
+spec:
+  host: api-gateway.enterprise-ai.svc.cluster.local
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        h2UpgradePolicy: DEFAULT
+        maxRequestsPerConnection: 10

@@ -1,0 +1,92 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "private-enterprise-ai-platform"
+version = "0.1.0"
+description = "Workspace root for the Private Enterprise AI Platform monorepo"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3.4",
+  "pytest-asyncio>=0.23.0",
+  "pytest-cov>=4.1.0",
+  "ruff>=0.8.2"
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = [
+  "services/api-gateway",
+  "services/chat-service",
+  "services/rag-service",
+  "services/ingestion-service",
+  "services/ocr-service",
+  "services/model-router",
+  "services/eval-service",
+  "shared/python-common"
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "shared/python-common/src"
+]
+testpaths = [
+  "services",
+  "shared",
+  "tests"
+]
+addopts = "--strict-markers --import-mode=importlib"
+asyncio_mode = "auto"
+markers = [
+  "integration: marks tests requiring live infrastructure",
+  "slow: marks slow tests",
+]
+
+[tool.coverage.run]
+source = ["services", "shared"]
+omit = ["*/tests/*", "*/__pycache__/*"]
+
+[tool.coverage.report]
+fail_under = 60
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.",
+    "if TYPE_CHECKING:",
+    "pass",
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "S", "B", "C4", "SIM", "TCH", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+"**/tests/**" = ["S101"]
+"conftest.py" = ["S101"]
+"tests/integration/**" = ["S101", "S106"]  # Test assertions + hardcoded test credentials
+"**/config/settings.py" = ["S105"]  # Hardcoded defaults are intentional for local dev
+"**/web/*.py" = ["TCH"]  # Runtime imports needed for FastAPI dependency injection
+"**/observability/*.py" = ["TCH"]
+"**/db/*.py" = ["TCH"]  # Runtime imports needed for contextmanager typing
+"**/ingestion_service/*.py" = ["TCH", "B008"]  # Runtime imports + FastAPI defaults
+"**/ocr_service/*.py" = ["TCH", "B008", "S110"]  # Runtime imports + FastAPI + fallback handlers
+"**/routes.py" = ["B008"]  # FastAPI File/Form/Depends in argument defaults is idiomatic
+
+[tool.ruff.format]
+quote-style = "double"

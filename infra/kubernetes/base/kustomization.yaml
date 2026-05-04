@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: enterprise-ai
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - secrets.yaml
+  - api-gateway/deployment.yaml
+  - api-gateway/service.yaml
+  - chat-service/deployment.yaml
+  - chat-service/service.yaml
+  - rag-service/deployment.yaml
+  - rag-service/service.yaml
+  - ingestion-service/deployment.yaml
+  - ingestion-service/service.yaml
+  - ocr-service/deployment.yaml
+  - ocr-service/service.yaml
+  - model-router/deployment.yaml
+  - model-router/service.yaml
+  - eval-service/deployment.yaml
+  - eval-service/service.yaml
+  - frontend/deployment.yaml
+  - frontend/service.yaml
+  - network-policy.yaml

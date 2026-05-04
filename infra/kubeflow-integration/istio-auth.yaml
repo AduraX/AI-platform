@@ -1,0 +1,65 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: ai-platform-keycloak-jwt
+  namespace: enterprise-ai
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: enterprise-ai-platform
+  jwtRules:
+    - issuer: "__KEYCLOAK_ISSUER__"
+      jwksUri: "__KEYCLOAK_JWKS_URI__"
+      forwardOriginalToken: true
+      outputClaimToHeaders:
+        - header: x-user-id
+          claim: email
+        - header: x-tenant-id
+          claim: tenant_id
+        - header: x-roles
+          claim: realm_access.roles
+      fromHeaders:
+        - name: Authorization
+          prefix: "Bearer "
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: ai-platform-require-jwt
+  namespace: enterprise-ai
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: enterprise-ai-platform
+  action: DENY
+  rules:
+    - from:
+        - source:
+            notRequestPrincipals: ["*"]
+      to:
+        - operation:
+            notPaths:
+              - /health
+              - /metrics
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: ai-platform-oauth2-proxy
+  namespace: enterprise-ai
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: enterprise-ai-platform
+  action: CUSTOM
+  provider:
+    name: oauth2-proxy
+  rules:
+    - to:
+        - operation:
+            notPaths:
+              - /health
+              - /metrics
+      when:
+        - key: request.headers[authorization]
+          notValues: ["*"]
