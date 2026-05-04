@@ -15,6 +15,4 @@ coverage/
 .coverage
 *.pyc
 *.pyo
-codex-notex.md
 docs/articles/
-.codex
